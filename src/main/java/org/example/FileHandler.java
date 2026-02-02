@@ -3,6 +3,7 @@ package org.example;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -34,11 +35,16 @@ public abstract class FileHandler {
 
             try {
                 executeCommand(map);
-            } catch (RuntimeException e) {
+            } catch (MissingIpAddressException | LocationException | UserException | InvalidParameterException e) {
                 pw.println(e.getMessage());
             }
         }
+        closeFiles();
+    }
+
+    public void closeFiles() {
         pw.close();
+        scanner.close();
     }
 
     public abstract void executeCommand(Map<String, String> map);

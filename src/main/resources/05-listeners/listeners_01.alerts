@@ -1,0 +1,16 @@
+Alert at server: 87.92.104.1: Sys anomaly
+Ilie, Admin has recognized alert of severity HIGH: Sys anomaly
+Matei, Operator has recognized alert of severity HIGH: Sys anomaly
+Flavius, Admin has recognized alert of severity HIGH: Sys anomaly
+Adrian, Operator has recognized alert of severity HIGH: Sys anomaly
+Alert at server: 82.45.83.41: RAM usage 65%
+Maria, Admin has recognized alert of severity MEDIUM: RAM usage 65%
+Marian, Operator has recognized alert of severity MEDIUM: RAM usage 65%
+Alert at server: 79.88.22.5: Storage usage 85%
+Andrei, Admin has recognized alert of severity HIGH: Storage usage 85%
+Maria, Admin has recognized alert of severity HIGH: Storage usage 85%
+Matei, Operator has recognized alert of severity HIGH: Storage usage 85%
+Alert at server: 79.88.22.5: DDoS
+Andrei, Admin has recognized alert of severity CRITICAL: DDoS
+Maria, Admin has recognized alert of severity CRITICAL: DDoS
+Matei, Operator has recognized alert of severity CRITICAL: DDoS

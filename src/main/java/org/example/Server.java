@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.Map;
 
 public class Server {
@@ -36,8 +37,9 @@ public class Server {
         this.resourceGroup = resourceGroup;
     }
 
-    public void notifyResourceGroup(Alert alert) {
-        //this.resourceGroup;
+    public void notifyResourceGroup(Alert alert, PrintWriter alertPw) {
+        alertPw.println("Alert at server: " + this.ipAddress + ": " + alert.getMessage());
+        this.resourceGroup.notifyMembers(alert, alertPw);
     }
 
     public static class Builder {

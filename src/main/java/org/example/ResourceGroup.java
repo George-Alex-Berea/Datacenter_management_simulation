@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,9 +10,12 @@ public class ResourceGroup {
     private String ipAddress;
     private Server server;
 
-    private ResourceGroup(String ipAddress) {
-        this.members = new LinkedList<>();
-        this.ipAddress = ipAddress;
+    private ResourceGroup(Builder b) {
+        this.members = b.members;
+        this.ipAddress = b.ipAddress;
+        this.server = b.server;
+        if (this.server != null)
+            this.server.setResourceGroup(this);
     }
 
     public String getIpAddress() {
@@ -26,6 +30,12 @@ public class ResourceGroup {
     }
     public List<User> getMembers() {
         return members;
+    }
+
+    public void notifyMembers(Alert alert, PrintWriter alertPw) {
+        for (User user : this.members) {
+            user.recognizeAlert(alert, alertPw);
+        }
     }
 
     public static class Builder {
@@ -44,7 +54,7 @@ public class ResourceGroup {
         }
 
         public ResourceGroup build() {
-            return new ResourceGroup(ipAddress);
+            return new ResourceGroup(this);
         }
     }
 }

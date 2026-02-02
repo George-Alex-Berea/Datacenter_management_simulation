@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,28 +38,20 @@ public class Database {
     }
 
     public void addServer(Server server) {
-        //if (servers.containsKey(server.getIpAddress()))
-          //  throw new IllegalArgumentException("Server already exists: " + server.getIpAddress());
-        servers.put(server.getIpAddress(), server);
+        this.servers.put(server.getIpAddress(), server);
     }
     public void addServers(Map<String, Server> servers) {
-        for (Map.Entry<String, Server> entry : servers.entrySet())
-            addServer(entry.getValue());
+        this.servers.putAll(servers);
     }
     public void addResourceGroup(ResourceGroup resourceGroup) {
-        //if (resourceGroups.containsKey(resourceGroup.getIpAddress()))
-          //  throw new IllegalArgumentException("ResourceGroup already exists: " + resourceGroup.getIpAddress());
-        resourceGroups.put(resourceGroup.getIpAddress(), resourceGroup);
+        this.resourceGroups.put(resourceGroup.getIpAddress(), resourceGroup);
     }
     public void addResourceGroups(Map<String, ResourceGroup> resourceGroups) {
-        for (Map.Entry<String, ResourceGroup> entry : resourceGroups.entrySet())
-            addResourceGroup(entry.getValue());
+        this.resourceGroups.putAll(resourceGroups);
     }
-    public void addAlert(Alert alert) {
+    public void addAlert(Alert alert, PrintWriter alertPw) {
         alerts.put(alert.getIpAddress(), alert);
-        ResourceGroup resourceGroup = resourceGroups.get(alert.getIpAddress());
-        for (User user : resourceGroup.getMembers()) {
-            user.recognizeAlert(alert);
-        }
+        Server server = servers.get(alert.getIpAddress());
+        server.notifyResourceGroup(alert, alertPw);
     }
 }

@@ -1,5 +1,7 @@
 package org.example;
 
+import java.io.PrintWriter;
+
 public class User {
     private String name;
     private String role;
@@ -29,7 +31,7 @@ public class User {
         resourceGroup.addMember(this);
     }
 
-    public void recognizeAlert(Alert alert) {
-        System.out.println(this.name + ", " + this.role + " has recognized alert of severity " + alert.getSeverity() + ": " + alert.getMessage());
+    public void recognizeAlert(Alert alert, PrintWriter alertPw) {
+        alertPw.println(this.name + ", " + this.role + " has recognized alert of severity " + alert.getSeverity() + ": " + alert.getMessage());
     }
 }
