@@ -14,4 +14,13 @@ public enum PathTypes {
     public String getValue() {
         return this.value;
     }
+
+    public static PathTypes parsePathTypes(String value) {
+        return switch (value.toLowerCase()) {
+            case "groups" -> GROUPS;
+            case "listener" -> LISTENER;
+            case "servers" -> SERVERS;
+            default -> throw new IllegalArgumentException("Invalid path type");
+        };
+    }
 }
