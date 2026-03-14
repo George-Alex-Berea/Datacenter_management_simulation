@@ -1,31 +1,33 @@
-# Logica aplicației
-* În funcția main se verifică cazul (2 sau 4 parametri), iar logica de analiză și parsare a liniilor 
-se face în metodele claselor ce moștenesc FileHandler.
-* Clasa abstractă FileHandler conține logica de citire a liniilor, lăsând implementările specifice de parsare de comenzi claselor copii.
-* Mi-am luat libertatea să modific Set-urile din Database în Map-uri, pentru a putea accesa în O(1) elementele (în loc de O(log(n)), dacă foloseam un TreeSet).
+# Application Logic
 
-# Design patterns
+* **Main Entry Point**: The `main` function handles case validation (checking for 2 or 4 parameters). The logic for line analysis and parsing is encapsulated within the methods of classes that inherit from `FileHandler`.
+* **File Handling**: The abstract class `FileHandler` implements the core line-reading logic, delegating specific command-parsing implementations to its subclasses.
+* **Performance Optimization**: I took the liberty of replacing `Sets` within the `Database` with `Maps`. This allows for element access in $O(1)$ time complexity, rather than the $O(\log n)$ complexity associated with a `TreeSet`.
+
+---
+
+# Design Patterns
+
 ## Singleton
-Database-ul este un singleton, ceea ce permite obținerea ușoară în orice moment a bazei de date, fără a o adăuga ca parametru al clasei sau al metodelor.
-Îmbunătățește și robustitatea aplicației, fiind imposibil să se creeze din greșeală 2 instanțe.
+The **Database** is implemented as a **Singleton**. This ensures the database instance is easily accessible from anywhere in the application without the need to pass it as a parameter. It also increases application robustness by preventing the accidental creation of multiple instances.
+
 ## Builder
-Există 3 clase ce implementează Builder Pattern: 
-* Server și Location motivat de prezența unui număr mare de parametri opționali în ambele cazuri 
-* ResourceGroup, care are Server ca parametru doar când suntem în cazul cu 3 fișiere (este necesar pentru Observer-ul care propagă alertele).
+The **Builder Pattern** is utilized for three specific classes:
+* **Server** and **Location**: Chosen due to the high number of optional parameters required for these objects.
+* **ResourceGroup**: Specifically used when a `Server` is required as a parameter (during the 3-file execution case) to facilitate the Observer alert propagation.
 
-Builder este preferat peste a folosi pur și simplu setteri
-pentru că obiectele devin imutabile după creație, deci elimină riscul unei modificări accidentale.
+> **Note:** The Builder pattern was chosen over standard setters to ensure objects remain **immutable** after creation, eliminating the risk of accidental state changes.
+
 ## Factory
-Există 3 Factory-uri:
-* FileHandlerFactory care creează fișierele de output în funcție de caz. Este util pentru că nu mai este necesar să
-tratăm fiecare tip separat la creare, alegerea făcându-se direct pe baza primului argument din linia de comandă.
-* ServerUserFactory creează un user cu rolul corect dintre (User, Operator, Admin) când citirea se face dintr-un fișier de tip servers.
-* GroupUserFactory la fel ca ServerUserFactory, dar pentru fișiere de tip groups. Existența separată de ServerUserFactory
-este justificată de faptul că diferă cheile pentru aceiași parametri, și în acest caz ei trebuie adăugați și în lista
-ResourceGroup-ului.
-## Observer
-Sunt implementați 2 observeri în "cascadă":
-* ResourceGroup este un observer pentru Serverul cu același IP.
-* Userii din ResourceGroup sunt observers pentru ResourceGroup.
+The application utilizes three **Factories**:
+* **FileHandlerFactory**: Instantiates the appropriate output files based on the context. This abstracts the creation logic, allowing the application to select the correct handler based solely on the first command-line argument.
+* **ServerUserFactory**: Generates users with specific roles (`User`, `Operator`, `Admin`) when parsing data from a "servers" file.
+* **GroupUserFactory**: Functions similarly to the `ServerUserFactory` but for "groups" files. It exists separately because the keys for identical parameters differ, and these users must also be registered within the `ResourceGroup` list.
 
-Când apare o alertă Serverul notifică ResourceGroup-ul, care notifică toți membrii.
+## Observer
+A **"Cascading" Observer** logic is implemented:
+1.  **ResourceGroup** acts as an observer for the **Server** sharing its IP.
+2.  **Users** within a `ResourceGroup` act as observers for that **ResourceGroup**.
+
+**Workflow:**
+When an alert is triggered, the `Server` notifies the `ResourceGroup`, which then automatically propagates the notification to all registered members.
